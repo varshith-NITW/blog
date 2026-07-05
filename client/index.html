@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Blog</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Blogger</h1>
+        </header>
+
+        <main class="grid">
+            <section class="form-section">
+                <h2>New Post</h2>
+                <form id="postForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="content">Content</label>
+                        <textarea id="content" name="content" rows="6" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image">Cover Image</label>
+                        <input type="file" id="image" name="image" accept="image/*" required>
+                        <div id="imagePreviewContainer" class="hidden">
+                            <img id="imagePreview" src="" alt="Preview">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn">
+                        <span class="btn-text">Publish</span>
+                        <span class="spinner hidden">...</span>
+                    </button>
+
+                    <div id="statusAlert" class="alert hidden"></div>
+                </form>
+            </section>
+
+            <section class="feed-section">
+                <div class="feed-header">
+                    <h2>Feed</h2>
+                    <span id="postCounter">0 posts</span>
+                </div>
+
+                <div class="search-group">
+                    <input type="text" id="searchInput" placeholder="Search...">
+                    <button id="clearSearchBtn" class="hidden">Clear</button>
+                </div>
+
+                <div id="postsList">
+                    <p class="loading">Loading...</p>
+                </div>
+
+                <div id="paginationFooter" class="pagination">
+                    <button id="prevPageBtn" disabled>Prev</button>
+                    <span id="pageIndicator">Page 1 of 1</span>
+                    <button id="nextPageBtn" disabled>Next</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
