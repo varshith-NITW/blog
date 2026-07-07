@@ -14,7 +14,7 @@ if (isConfigured) {
     });
     console.log("cloudinary success");
 } else {
-    console.log("cloudinary fallback");
+    console.log("cloudinary fail");
 }
 
 module.exports = { cloudinary, isCloudinaryConfigured: isConfigured };
