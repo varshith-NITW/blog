@@ -1,76 +1,50 @@
 import { publishPost } from '../services/api.js';
 
 export function initPostForm({ onSubmitSuccess }) {
-    const postForm = document.getElementById('postForm');
-    const fileInput = document.getElementById('image');
-    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-    const imagePreview = document.getElementById('imagePreview');
-    
+    const form = document.getElementById('postForm');
+    const input = document.getElementById('image');
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const preview = document.getElementById('imagePreview');
+    const status = document.getElementById('statusAlert');
     const submitBtn = document.getElementById('submitBtn');
-    const submitBtnSpinner = submitBtn.querySelector('.spinner');
-    const submitBtnText = submitBtn.querySelector('.btn-text');
-    const statusAlert = document.getElementById('statusAlert');
 
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
+    input.addEventListener('change', () => {
+        const file = input.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
-                imagePreview.src = e.target.result;
-                imagePreviewContainer.classList.remove('hidden');
+                preview.src = e.target.result;
+                previewContainer.classList.remove('hidden');
             };
             reader.readAsDataURL(file);
         } else {
-            resetImagePreview();
+            resetPreview();
         }
     });
 
-    function resetImagePreview() {
-        imagePreview.src = '';
-        imagePreviewContainer.classList.add('hidden');
+    function resetPreview() {
+        preview.src = '';
+        previewContainer.classList.add('hidden');
     }
 
-    function resetFormUI() {
-        postForm.reset();
-        fileInput.value = '';
-        resetImagePreview();
-    }
-
-    postForm.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
-
         submitBtn.disabled = true;
-        submitBtnText.textContent = "Publishing...";
-        submitBtnSpinner.classList.remove('hidden');
-        showAlert(null);
-
-        const formData = new FormData(postForm);
+        status.className = 'alert hidden';
 
         try {
-            await publishPost(formData);
-            showAlert('Success! Your story has been published to the feed.', 'success');
-            resetFormUI();
-            
-            if (typeof onSubmitSuccess === 'function') {
-                onSubmitSuccess();
-            }
-        } catch (error) {
-            console.error("Submit error:", error);
-            showAlert(`Error: ${error.message || 'Unable to publish post.'}`, 'error');
+            const res = await publishPost(new FormData(form));
+            if (res.error) throw new Error(res.error);
+            status.className = 'alert success';
+            status.textContent = 'Published successfully!';
+            form.reset();
+            resetPreview();
+            onSubmitSuccess();
+        } catch (err) {
+            status.className = 'alert error';
+            status.textContent = err.message || 'Error publishing post';
         } finally {
             submitBtn.disabled = false;
-            submitBtnText.textContent = "Publish";
-            submitBtnSpinner.classList.add('hidden');
         }
     });
-
-    function showAlert(message, type = '') {
-        if (!message) {
-            statusAlert.className = 'alert hidden';
-            statusAlert.textContent = '';
-            return;
-        }
-        statusAlert.className = `alert ${type}`;
-        statusAlert.textContent = message;
-    }
 }

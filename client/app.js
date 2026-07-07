@@ -6,57 +6,24 @@ import { initPagination, updatePaginationUI } from './components/Pagination.js';
 
 let currentPage = 1;
 let searchQuery = "";
-const postsLimit = 4;
 
 document.addEventListener('DOMContentLoaded', () => {
     loadFeed();
-
-    initPostForm({
-        onSubmitSuccess: () => {
-            currentPage = 1;
-            loadFeed();
-        }
-    });
-
-    initSearchBar({
-        onSearchChange: (newQuery) => {
-            searchQuery = newQuery;
-            currentPage = 1;
-            loadFeed();
-        }
-    });
-
-    initPagination({
-        onPageChange: (direction) => {
-            if (direction === 'prev' && currentPage > 1) {
-                currentPage--;
-            } else if (direction === 'next') {
-                currentPage++;
-            }
-            loadFeed();
-        }
-    });
+    initPostForm({ onSubmitSuccess: () => { currentPage = 1; loadFeed(); } });
+    initSearchBar({ onSearchChange: (q) => { searchQuery = q; currentPage = 1; loadFeed(); } });
+    initPagination({ onPageChange: (dir) => {
+        currentPage += (dir === 'next' ? 1 : -1);
+        loadFeed();
+    }});
 });
 
 async function loadFeed() {
     showLoading();
-
     try {
-        const data = await fetchPosts({
-            search: searchQuery,
-            page: currentPage,
-            limit: postsLimit
-        });
-
+        const data = await fetchPosts({ search: searchQuery, page: currentPage, limit: 4 });
         renderPosts(data);
-
-        updatePaginationUI({
-            currentPage: data.currentPage,
-            totalPages: data.totalPages
-        });
-
-    } catch (error) {
-        console.error("Error loading feed:", error);
-        showError(error.message, () => loadFeed());
+        updatePaginationUI(data);
+    } catch (err) {
+        showError(err.message);
     }
 }
