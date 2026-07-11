@@ -1,11 +1,11 @@
 {
-  "name": "blog",
+  "name": "blog-render",
   "version": "1.0.0",
-  "description": "Full-stack blog application with Multer, Cloudinary, Search, and Pagination",
-  "main": "server.js",
+  "description": "Full-stack blog application configured for Render deployment",
+  "main": "server/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "node server/server.js",
+    "dev": "node server/server.js"
   },
   "dependencies": {
     "cloudinary": "^2.2.0",
