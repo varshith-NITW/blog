@@ -1,3 +1,10 @@
+if (typeof globalThis.crypto === 'undefined') {
+    try {
+        globalThis.crypto = require('crypto').webcrypto;
+    } catch (err) {
+        globalThis.crypto = require('crypto');
+    }
+}
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
