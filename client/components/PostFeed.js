@@ -10,8 +10,8 @@ export function showError(msg) {
     postsList.innerHTML = `<p class="empty-state">${msg}</p>`;
 }
 
-export function renderPosts(data) {
-    const { posts, totalCount } = data;
+export function renderPosts(data = {}) {
+    const { posts = [], totalCount = 0 } = data;
     postCounter.textContent = `${totalCount} ${totalCount === 1 ? 'post' : 'posts'}`;
 
     if (!posts.length) {
